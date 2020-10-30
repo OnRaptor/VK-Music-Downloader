@@ -11,8 +11,12 @@
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
                 <!-- Other merged dictionaries here -->
+                <ResourceDictionary Source="Styles\Button.xaml" />
+                <ResourceDictionary Source="Styles\TextInput.xaml" />
+                <ResourceDictionary Source="Styles\TabControl.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
+            <!-- Other app resources here -->            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

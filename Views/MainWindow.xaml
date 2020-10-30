@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         
     ui:WindowHelper.UseModernWindowStyle="True">
 
@@ -15,7 +16,35 @@
         <viewmodels:MainViewModel />
     </Window.DataContext>
 
-    <Grid>
+    <Grid Background="#292723">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="39"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!---Search Box-->
+        <Grid Margin="3" Grid.Column="0" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Background="#57524a" Foreground="WhiteSmoke" HorizontalContentAlignment="Center"/>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" Height="33">
+                <iconPacks:PackIconModern Kind="Magnify" />
+            </Button>
+        </Grid>
+
+        <!--Tabs-->
+        <TabControl Grid.Row="1">
+            <TabItem HorizontalAlignment="Center" Header="Моя Музыка" Foreground="WhiteSmoke"  IsSelected="True" Background="#FF872487"/>
+            <TabItem HorizontalAlignment="Center" Header="Рекомендации" />
+            <TabItem HorizontalAlignment="Center" Header="Плейлисты" />
+        </TabControl>
+
 
     </Grid>
 </Window>
