@@ -22,7 +22,18 @@ namespace MVVM_Base.View_Models
     public class MainViewModel : ViewModelBase
     {
         public List<VkAudio> Audios { get; set; }
-        public VkAudio selectedAudio { get; set; }
+
+        VkAudio _selectedAudio;
+        public VkAudio selectedAudio
+        {
+            get => _selectedAudio;
+            set
+            {
+                if (value != null)
+                    _selectedAudio = value;
+                else return;
+            }
+        }
 
         string _SearchText { get; set; }
         public string SearchText {get => _SearchText; set
@@ -35,7 +46,7 @@ namespace MVVM_Base.View_Models
         WebClient web = new WebClient();
         public MainViewModel()
         {
-            VK.Authorize("b583587550bddabb4d032bd30edc46442cdb4598737df47f45c3adf0caf44baf467a05b8f8f309870f202");
+            VK.Authorize("f6cc9a0093103e8624c888fc7dd37a36d2eb1b6695a4998a5f13efe5cd78fb1f332e28e9062565194975f");
             Task.Run(() =>
             {
                 GetMyMusic.Execute(null);
@@ -80,6 +91,18 @@ namespace MVVM_Base.View_Models
             }
         }
 
+        public ICommand SearchAuthor
+        {
+            get
+            {
+                return new DelegateCommand<string>((name) =>
+                {
+                    Audios = VK.SearchAuthor(name);
+                });
+
+            }
+        }
+
         public ICommand ShowPreview
         {
             get
@@ -89,7 +112,7 @@ namespace MVVM_Base.View_Models
                     Image preview = new Image();
                     BitmapImage image;
                     image = new BitmapImage();
-
+                    if (url == null) return;
                     image.BeginInit();
                     image.UriSource = new Uri(url);
                     image.EndInit();
@@ -123,6 +146,10 @@ namespace MVVM_Base.View_Models
                     string filename;
                     System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
                     dialog.ShowDialog();
+
+                    if (selectedAudio.Author == null)
+                        selectedAudio.Author = "Unknown";
+
                     filename = dialog.SelectedPath + $"\\{selectedAudio.Title} - {selectedAudio.Author}.mp3";
 
                     web.DownloadFileAsync(new Uri(selectedAudio.Url), filename); //audio                    

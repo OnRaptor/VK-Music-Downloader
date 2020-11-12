@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace MVVM_Base.Models
 {
-    public class VkPlayer : MediaElement
+    public class VkPlayer : MediaElement 
     {
         private bool _IsPause = false;
+
+        public DependencyProperty PositionProperty = DependencyProperty.Register("PositionSecs", typeof(int), typeof(VkPlayer));
         public bool IsPause { get => _IsPause;
             set
             {
@@ -22,16 +19,18 @@ namespace MVVM_Base.Models
                     Play();
             }
         }
-        public Image preview { get; set; }
-        public ContentControl content { get; set; }
-        public double PositionSecs
+        public int PositionSecs
         {
             get
             {
-                return Position.TotalSeconds;
+                MessageBox.Show("Changed", GetValue(PositionProperty).ToString());
+                return (int)GetValue(PositionProperty);
+
             }
             set {
-                Position = TimeSpan.FromSeconds(PositionSecs);
+                SetValue(PositionProperty, value);
+                Position = TimeSpan.FromSeconds((int) GetValue(PositionProperty));
+                MessageBox.Show("Changed", value.ToString());
             }
         }
 
@@ -39,15 +38,15 @@ namespace MVVM_Base.Models
         {
             LoadedBehavior = MediaState.Manual;
             UnloadedBehavior = MediaState.Manual;
+
             MediaOpened += (s, e) => {
                 Position = TimeSpan.FromSeconds(0);
-                IsPause = false;
-                Play();
             };
+
             MediaEnded += (s, e) =>
             {
                 Position = TimeSpan.FromSeconds(0);
-                IsPause = true;
+                IsPause = false;
             };
 
             MediaFailed += (s, e) =>

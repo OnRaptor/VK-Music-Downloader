@@ -68,4 +68,20 @@ namespace MVVM_Base
         }
     }
 
+    public class HoursMinutesTimeSpanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+                              System.Globalization.CultureInfo culture)
+        {
+            // TODO something like:
+            return ((TimeSpan) value).ToString("hh':'mm':'ss");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+                                  System.Globalization.CultureInfo culture)
+        {
+            // TODO something like:
+            return TimeSpan.ParseExact(value.ToString(), "hh':'mm':'ss", System.Globalization.CultureInfo.CurrentCulture);
+        }
+    }
 }

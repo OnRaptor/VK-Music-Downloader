@@ -20,10 +20,7 @@ namespace MVVM_Base.Models
         }
         public string Author { get; set; }
         public string Duration { get; set; }
-        public int DurationSeconds { get {
-                TimeSpan.TryParse(Duration, out TimeSpan tick);
-                return tick.Seconds;
-            } set { Duration = value.ToString(@"mm\:ss"); } }
+        public int DurationSeconds { get; set; }
         public string ThumbUrl { get; set; }
         public string ThumbUrlFull { get; set; }
         public string Url { get; set; }

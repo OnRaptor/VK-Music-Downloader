@@ -39,7 +39,7 @@ namespace MVVM_Base.Models
         }
         static VkAudio VkAudioTo(Audio audio)
         {
-            return new VkAudio { Author = audio.Artist, Duration = TimeSpan.FromSeconds(audio.Duration).ToString(@"mm\:ss"), Title = audio.Title, Url = M3U8ToMp3(audio.Url?.AbsoluteUri)?.Replace("https", "http") , ThumbUrl = audio.Album?.Thumb?.Photo68, ThumbUrlFull = audio.Album?.Thumb?.Photo600};
+            return new VkAudio { Author = audio.Artist, Duration = TimeSpan.FromSeconds(audio.Duration).ToString(@"mm\:ss"), DurationSeconds = audio.Duration, Title = audio.Title, Url = M3U8ToMp3(audio.Url?.AbsoluteUri)?.Replace("https", "http") , ThumbUrl = audio.Album?.Thumb?.Photo68, ThumbUrlFull = audio.Album?.Thumb?.Photo600};
         }
 
         public static List<VkAudio> GetUserAudios()
@@ -68,6 +68,21 @@ namespace MVVM_Base.Models
                 Autocomplete = true,
                 SearchOwn = true,
                 Query = name
+            }))
+                audios.Add(VkAudioTo(audio));
+
+            return audios.ToList();
+        }
+
+        public static List<VkAudio> SearchAuthor(string name)
+        {
+            List<VkAudio> audios = new List<VkAudio>();
+            foreach (var audio in api.Audio.Search(new VkNet.Model.RequestParams.AudioSearchParams
+            {
+                Autocomplete = true,
+                SearchOwn = true,
+                Query = name,
+                PerformerOnly = true
             }))
                 audios.Add(VkAudioTo(audio));
 

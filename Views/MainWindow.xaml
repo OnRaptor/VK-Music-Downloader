@@ -10,7 +10,7 @@
         Title="Vk Music" Height="500" Width="920" ResizeMode="CanMinimize"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        Topmost="True"
+        Topmost="True"       
     ui:WindowHelper.UseModernWindowStyle="True">
 
     <Window.DataContext>
@@ -23,8 +23,9 @@
         </Style>
 
         <local:BoolToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <local:HoursMinutesTimeSpanConverter x:Key="TimeSpanConvertor" />
     </Window.Resources>
-
+    
     <Grid x:Name="Root" Background="#292723">
         <Grid.RowDefinitions>
             <RowDefinition Height="39"/>
@@ -43,7 +44,7 @@
                 <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="SearchBox" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" Grid.Column="0" HorizontalAlignment="Stretch" Background="#57524a" Foreground="WhiteSmoke" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name="SearchBox" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" Grid.Column="0" HorizontalAlignment="Stretch" Background="#57524a" Foreground="WhiteSmoke" HorizontalContentAlignment="Center" BorderBrush="Transparent"/>
             <Button Grid.Column="1" HorizontalAlignment="Stretch" Height="33">
                 <iconPacks:PackIconModern Kind="Magnify" />
             </Button>
@@ -88,7 +89,18 @@
 
                             <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" Margin="10,0" Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="{Binding Title}" Width="760" FontSize="16"/>
-                                <TextBlock Text="{Binding Author}" Width="760" FontSize="11"/>
+                                
+                                <TextBlock FontSize="13">
+                                <Hyperlink>
+                                    <Hyperlink.InputBindings>
+                                        <MouseBinding Gesture="LeftClick" Command="{Binding RelativeSource={
+                               RelativeSource FindAncestor, 
+                               AncestorType={x:Type Window}},
+                               Path=DataContext.SearchAuthor}" CommandParameter="{Binding Author}"/>
+                                    </Hyperlink.InputBindings>
+                                <TextBlock Text="{Binding Author}" Foreground="LightGray" FontSize="12" FontStyle="Italic"/>
+                                 </Hyperlink>
+                                </TextBlock>
                             </StackPanel>
                             
                             <StackPanel Orientation="Vertical">
@@ -107,11 +119,12 @@
                 <Grid Margin="5,0,5,2" Background="Transparent" Height="45" Width="920">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="350"/>
-                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="795"/>
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                    <controls:VkPlayer x:Name="player" Source="{Binding selectedAudio.Url}" Grid.Column="0" Width="50" Height="50"/>
+                    <controls:VkPlayer x:Name="player" Source="{Binding selectedAudio.Url}" Grid.Column="0" Width="50" Height="50" PositionSecs="0"/>
+                    
                     <ToggleButton IsChecked="{Binding ElementName=player,Path=IsPause,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Column="0"                                 Background="Transparent">
                         <Ellipse Width="30" Height="30">
                             <Ellipse.Fill>
@@ -120,9 +133,29 @@
                         </Ellipse>
                     </ToggleButton>
                     <StackPanel VerticalAlignment="Center" Grid.Column="1" Orientation="Vertical">
-                        <TextBlock Text="{Binding selectedAudio.Title}" FontSize="15"/>
-                        <TextBlock Text="{Binding selectedAudio.Author}" FontSize="12"/>
-                    </StackPanel>
+                        <TextBlock>
+                            <TextBlock FontSize="13">
+                                <Bold>
+                                <TextBlock Text="{Binding selectedAudio.Title}" FontSize="13" Foreground="WhiteSmoke"/>
+                                 </Bold>
+                            </TextBlock>
+                            <TextBlock Text=" - " FontSize="12"/>
+                            <TextBlock FontSize="13">
+                                <Hyperlink>
+                                    <Hyperlink.InputBindings>
+                                        <MouseBinding Gesture="LeftClick" Command="{Binding SearchAuthor}" CommandParameter="{Binding selectedAudio.Author}"/>
+                                    </Hyperlink.InputBindings>
+                                <TextBlock Text="{Binding selectedAudio.Author}" FontSize="13" Foreground="Gray" FontStyle="Italic"/>
+                                 </Hyperlink>
+                            </TextBlock>
+                        </TextBlock>
+                        
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+                            <Slider x:Name="slider" Width="700" Maximum="{Binding selectedAudio.DurationSeconds}" TickFrequency="2" SmallChange="1" />
+                            
+                            <TextBlock Text="{Binding ElementName=player, Path=PositionSecs}" Margin="5,0,5,0"/>
+                        </StackPanel>
+                    </StackPanel>                  
                 </Grid>
             </Border> 
         </StatusBar>
